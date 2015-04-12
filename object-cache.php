@@ -781,6 +781,27 @@ class WP_Object_Cache {
 	public $cache = array();
 
 	/**
+	 * Holds a list of environment variables to search for a list of memcache servers.
+	 *
+	 * @var array
+	 */
+	public $search_envs_servers = array( 'MEMCACHE_SERVERS', 'MEMCACHIER_SERVERS' );
+
+	/**
+	 * Holds a list of environment variables to search for a memcache SASL username.
+	 *
+	 * @var array
+	 */
+	public $search_envs_username = array( 'MEMCACHE_USERNAME', 'MEMCACHIER_USERNAME' );
+
+	/**
+	 * Holds a list of environment variables to search for a memcache SASL password.
+	 *
+	 * @var array
+	 */
+	public $search_envs_password = array( 'MEMCACHE_PASSWORD', 'MEMCACHIER_PASSWORD' );
+
+	/**
 	 * List of global groups.
 	 *
 	 * @var array
@@ -809,6 +830,20 @@ class WP_Object_Cache {
 	public $blog_prefix = '';
 
 	/**
+	 * Holds the SASL auth username.
+	 *
+	 * @var string
+	 */
+	private $username;
+	
+	/**
+	 * Holds the SASL auth password.
+	 *
+	 * @var string
+	 */
+	private $password;
+
+	/**
 	 * Instantiate the Memcached class.
 	 *
 	 * Instantiates the Memcached class and returns adds the servers specified
@@ -819,19 +854,39 @@ class WP_Object_Cache {
 	 * @param   null    $persistent_id      To create an instance that persists between requests, use persistent_id to specify a unique ID for the instance.
 	 */
 	public function __construct( $persistent_id = NULL ) {
-		global $memcached_servers, $blog_id, $table_prefix;
+		global $memcached_servers, $memcached_username, $memcached_password, $blog_id, $table_prefix;
 
 		if ( is_null( $persistent_id ) || ! is_string( $persistent_id ) )
 			$this->m = new Memcached();
 		else
 			$this->m = new Memcached( $persistent_id );
 
-		if ( isset( $memcached_servers ) )
+		if ( isset( $memcached_servers ) ) {
 			$this->servers = $memcached_servers;
+		} else {
+			$svrs = explode(',', tryenv( $search_envs_servers, '127.0.0.1:11211' ) );
+			$this->servers = array( );
+			foreach ( $svrs as $srv ) {
+				array_push( $this->servers, explode(':', $srv) );
+			}
+		}
+		
+		if ( isset( $memcached_username ) )
+			$this->username = $memcached_username;
 		else
-			$this->servers = array( array( '127.0.0.1', 11211 ) );
+			$this->username = tryenv( $search_envs_username, NULL );
 
-		$this->addServers( $this->servers );
+		if ( isset( $memcached_password ) )
+			$this->password = $memcached_password;
+		else
+			$this->password = tryenv( $search_envs_password, NULL );
+
+		$this->m->addServers( $this->servers );
+
+		if ( version_compare( phpversion( 'memcached' ) , '2.2', '>=' ) && isset( $this->username ) && isset( $this->password )) {
+			$this->m->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
+			$this->m->setSaslAuthData($this->username, $this->password);
+		}
 
 		/**
 		 * This approach is borrowed from Sivel and Boren. Use the salt for easy cache invalidation and for
@@ -849,6 +904,16 @@ class WP_Object_Cache {
 		// Setup cacheable values for handling expiration times
 		$this->thirty_days = 60 * 60 * 24 * 30;
 		$this->now         = time();
+	}
+
+	public function tryenv( $envs, $default ) {
+		foreach ( $envs as $env ) {
+			$val = getenv( $env );
+			if ( $val ) {
+				return $val;
+			}
+		}
+		return $default;
 	}
 
 	/**
