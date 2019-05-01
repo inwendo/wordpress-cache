@@ -907,7 +907,7 @@ class WP_Object_Cache {
 	}
 
 	public function tryenv( $envs, $default ) {
-		foreach ( $envs as $env ) {
+		foreach ( (array) $envs as $env ) {
 			$val = getenv( $env );
 			if ( $val ) {
 				return $val;
