@@ -864,7 +864,7 @@ class WP_Object_Cache {
 		if ( isset( $memcached_servers ) ) {
 			$this->servers = $memcached_servers;
 		} else {
-			$svrs = explode(',', $this->tryenv( $search_envs_servers, '127.0.0.1:11211' ) );
+			$svrs = explode(',', $this->tryenv( $this->search_envs_servers, '127.0.0.1:11211' ) );
 			$this->servers = array( );
 			foreach ( $svrs as $srv ) {
 				array_push( $this->servers, explode(':', $srv) );
@@ -874,12 +874,12 @@ class WP_Object_Cache {
 		if ( isset( $memcached_username ) )
 			$this->username = $memcached_username;
 		else
-			$this->username = $this->tryenv( $search_envs_username, NULL );
+			$this->username = $this->tryenv( $this->search_envs_username, NULL );
 
 		if ( isset( $memcached_password ) )
 			$this->password = $memcached_password;
 		else
-			$this->password = $this->tryenv( $search_envs_password, NULL );
+			$this->password = $this->tryenv( $this->search_envs_password, NULL );
 
 		$this->m->addServers( $this->servers );
 
