@@ -835,7 +835,7 @@ class WP_Object_Cache {
 	 * @var string
 	 */
 	private $username;
-	
+
 	/**
 	 * Holds the SASL auth password.
 	 *
@@ -864,22 +864,22 @@ class WP_Object_Cache {
 		if ( isset( $memcached_servers ) ) {
 			$this->servers = $memcached_servers;
 		} else {
-			$svrs = explode(',', tryenv( $search_envs_servers, '127.0.0.1:11211' ) );
+			$svrs = explode(',', $this->tryenv( $search_envs_servers, '127.0.0.1:11211' ) );
 			$this->servers = array( );
 			foreach ( $svrs as $srv ) {
 				array_push( $this->servers, explode(':', $srv) );
 			}
 		}
-		
+
 		if ( isset( $memcached_username ) )
 			$this->username = $memcached_username;
 		else
-			$this->username = tryenv( $search_envs_username, NULL );
+			$this->username = $this->tryenv( $search_envs_username, NULL );
 
 		if ( isset( $memcached_password ) )
 			$this->password = $memcached_password;
 		else
-			$this->password = tryenv( $search_envs_password, NULL );
+			$this->password = $this->tryenv( $search_envs_password, NULL );
 
 		$this->m->addServers( $this->servers );
 
