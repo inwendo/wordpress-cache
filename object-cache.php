@@ -838,7 +838,7 @@ class WP_Object_Cache {
 	 *
 	 * @link    http://www.php.net/manual/en/memcached.construct.php
 	 *
-	 * @param   null    $persistent_id      To create an instance that persists between requests, use persistent_id to specify a unique ID for the instance.
+	 * @param   'iw_persistent_memcached'    $persistent_id      To create an instance that persists between requests, use persistent_id to specify a unique ID for the instance.
 	 */
 	public function __construct( $persistent_id = 'iw_persistent_memcached' ) {
 		global $blog_id, $table_prefix;
