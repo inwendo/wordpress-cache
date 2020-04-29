@@ -889,9 +889,11 @@ class WP_Object_Cache {
 
 		$this->m->addServers( $this->servers );
 
-		if ( version_compare( phpversion( 'memcached' ) , '2.2', '>=' ) && isset( $this->username ) && isset( $this->password )) {
+		if ( version_compare( phpversion( 'memcached' ) , '2.2', '>=' ) ) {
 			$this->m->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
-			$this->m->setSaslAuthData($this->username, $this->password);
+			if (isset( $this->username ) && isset( $this->password )) {
+				$this->m->setSaslAuthData($this->username, $this->password);
+			}
 		}
 
 		/**
