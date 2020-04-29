@@ -5,9 +5,13 @@ if (!defined('IW_DEFAULT_MEMCACHE_EXPIRATION')) {
     define('IW_DEFAULT_MEMCACHE_EXPIRATION', 21600);
 }
 
-if (!defined('WP_CACHE_KEY_SALT') && defined('DB_NAME')){
-    // if no WP_CACHE_KEY_SALT is defined use DB_NAME
-    define('WP_CACHE_KEY_SALT', DB_NAME);
+if (!defined('IW_WP_CACHE_KEY_SALT') && defined('DB_NAME')){
+    // if no IW_WP_CACHE_KEY_SALT is defined use DB_NAME
+    define('IW_WP_CACHE_KEY_SALT', DB_NAME);
+}
+
+if (!defined('IW_MEMCACHE_SERVERS')){
+    define('IW_MEMCACHE_SERVERS', 'iw-memcached:11211');
 }
 
 /**
@@ -778,39 +782,11 @@ class WP_Object_Cache {
 	public $m;
 
 	/**
-	 * Hold the Memcached server details.
-	 *
-	 * @var array
-	 */
-	public $servers;
-
-	/**
 	 * Holds the non-Memcached objects.
 	 *
 	 * @var array
 	 */
 	public $cache = array();
-
-	/**
-	 * Holds a list of environment variables to search for a list of memcache servers.
-	 *
-	 * @var array
-	 */
-	public $search_envs_servers = array( 'MEMCACHE_SERVERS', 'MEMCACHIER_SERVERS' );
-
-	/**
-	 * Holds a list of environment variables to search for a memcache SASL username.
-	 *
-	 * @var array
-	 */
-	public $search_envs_username = array( 'MEMCACHE_USERNAME', 'MEMCACHIER_USERNAME' );
-
-	/**
-	 * Holds a list of environment variables to search for a memcache SASL password.
-	 *
-	 * @var array
-	 */
-	public $search_envs_password = array( 'MEMCACHE_PASSWORD', 'MEMCACHIER_PASSWORD' );
 
 	/**
 	 * List of global groups.
@@ -864,49 +840,38 @@ class WP_Object_Cache {
 	 *
 	 * @param   null    $persistent_id      To create an instance that persists between requests, use persistent_id to specify a unique ID for the instance.
 	 */
-	public function __construct( $persistent_id = NULL ) {
-		global $memcached_servers, $memcached_username, $memcached_password, $blog_id, $table_prefix;
+	public function __construct( $persistent_id = 'iw_persistent_memcached' ) {
+		global $blog_id, $table_prefix;
 
-		if ( is_null( $persistent_id ) || ! is_string( $persistent_id ) )
-			$this->m = new Memcached();
-		else
-			$this->m = new Memcached( $persistent_id );
+		$this->m = new Memcached( $persistent_id );
 
-		if ( isset( $memcached_servers ) ) {
-			$this->servers = $memcached_servers;
-		} else {
-			$svrs = explode(',', $this->tryenv( $this->search_envs_servers, 'iw-memcached:11211' ) );
-			$this->servers = array( );
+		if (!count($this->m->getServerList())) {
+			$svrs = explode(',', IW_MEMCACHE_SERVERS);
+			$servers = array();
 			foreach ( $svrs as $srv ) {
-				array_push( $this->servers, explode(':', $srv) );
+				array_push( $servers, explode(':', $srv) );
 			}
+			$this->m->addServers( $servers );
 		}
 
-		if ( isset( $memcached_username ) )
-			$this->username = $memcached_username;
-		else
-			$this->username = $this->tryenv( $this->search_envs_username, NULL );
+		if ( defined( 'IW_MEMCACHE_USERNAME' ) )
+			$this->username = IW_MEMCACHE_USERNAME;
 
-		if ( isset( $memcached_password ) )
-			$this->password = $memcached_password;
-		else
-			$this->password = $this->tryenv( $this->search_envs_password, NULL );
+		if ( defined( 'IW_MEMCACHE_PASSWORD' ) )
+			$this->password = IW_MEMCACHE_PASSWORD;	
 
-		$this->m->addServers( $this->servers );
+		$this->m->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
 
-		if ( version_compare( phpversion( 'memcached' ) , '2.2', '>=' ) ) {
-			$this->m->setOption(Memcached::OPT_BINARY_PROTOCOL, true);
-			if (isset( $this->username ) && isset( $this->password )) {
-				$this->m->setSaslAuthData($this->username, $this->password);
-			}
+		if (isset( $this->username ) && isset( $this->password )) {
+			$this->m->setSaslAuthData($this->username, $this->password);
 		}
 
 		/**
 		 * This approach is borrowed from Sivel and Boren. Use the salt for easy cache invalidation and for
 		 * multi single WP installs on the same server.
 		 */
-		if ( ! defined( 'WP_CACHE_KEY_SALT' ) )
-			define( 'WP_CACHE_KEY_SALT', '' );
+		if ( ! defined( 'IW_WP_CACHE_KEY_SALT' ) )
+			define( 'IW_WP_CACHE_KEY_SALT', '' );
 
 		// Assign global and blog prefixes for use with keys
 		if ( function_exists( 'is_multisite' ) ) {
@@ -917,16 +882,6 @@ class WP_Object_Cache {
 		// Setup cacheable values for handling expiration times
 		$this->thirty_days = 60 * 60 * 24 * 30;
 		$this->now         = time();
-	}
-
-	public function tryenv( $envs, $default ) {
-		foreach ( (array) $envs as $env ) {
-			$val = getenv( $env );
-			if ( $val ) {
-				return $val;
-			}
-		}
-		return $default;
 	}
 
 	/**
@@ -1990,7 +1945,7 @@ class WP_Object_Cache {
 		else
 			$prefix = $this->blog_prefix;
 
-		return preg_replace( '/\s+/', '', WP_CACHE_KEY_SALT . "$prefix$group:$key" );
+		return preg_replace( '/\s+/', '', IW_WP_CACHE_KEY_SALT . "$prefix$group:$key" );
 	}
 
 	/**
