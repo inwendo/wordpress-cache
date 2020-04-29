@@ -880,8 +880,7 @@ class WP_Object_Cache {
 		}
 
 		// Setup cacheable values for handling expiration times
-		$this->thirty_days = 60 * 60 * 24 * 30;
-		$this->now         = time();
+		$this->now = time();
 	}
 
 	/**
@@ -2006,7 +2005,7 @@ class WP_Object_Cache {
 	 * @return string|int                   The sanitized expiration time.
 	 */
 	public function sanitize_expiration( $expiration ) {
-		if ( $expiration > $this->thirty_days && $expiration <= $this->now ) {
+		if ( $expiration > 2592000 && $expiration <= $this->now ) {
 			$expiration = $expiration + $this->now;
 		}
 
