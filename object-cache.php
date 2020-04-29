@@ -1945,7 +1945,7 @@ class WP_Object_Cache {
 		else
 			$prefix = $this->blog_prefix;
 
-		return preg_replace( '/\s+/', '', IW_WP_CACHE_KEY_SALT . "$prefix$group:$key" );
+		return IW_WP_CACHE_KEY_SALT . preg_replace( '/\s+/', '', "$prefix$group:$key" );
 	}
 
 	/**
