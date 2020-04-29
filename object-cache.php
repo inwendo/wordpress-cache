@@ -59,7 +59,7 @@ function wp_cache_add_server( $host, $port, $weight = 0 ) {
  * Adds an array of servers to the pool.
  *
  * Each individual server in the array must include a domain and port, with an optional
- * weight value: $servers = array( array( '127.0.0.1', 11211, 0 ) );
+ * weight value: $servers = array( array( 'iw-memcached', 11211, 0 ) );
  *
  * @link http://www.php.net/manual/en/memcached.addservers.php
  *
@@ -864,7 +864,7 @@ class WP_Object_Cache {
 		if ( isset( $memcached_servers ) ) {
 			$this->servers = $memcached_servers;
 		} else {
-			$svrs = explode(',', $this->tryenv( $this->search_envs_servers, '127.0.0.1:11211' ) );
+			$svrs = explode(',', $this->tryenv( $this->search_envs_servers, 'iw-memcached:11211' ) );
 			$this->servers = array( );
 			foreach ( $svrs as $srv ) {
 				array_push( $this->servers, explode(':', $srv) );
@@ -1003,7 +1003,7 @@ class WP_Object_Cache {
 	 * @return  bool                        Returns TRUE on success or FALSE on failure.
 	 */
 	public function addServer( $host, $port, $weight = 0 ) {
-		$host = is_string( $host ) ? $host : '127.0.0.1';
+		$host = is_string( $host ) ? $host : 'iw-memcached';
 		$port = is_numeric( $port ) && $port > 0 ? $port : 11211;
 		$weight = is_numeric( $weight ) && $weight > 0 ? $weight : 1;
 
@@ -1014,7 +1014,7 @@ class WP_Object_Cache {
 	 * Adds an array of servers to the pool.
 	 *
 	 * Each individual server in the array must include a domain and port, with an optional
-	 * weight value: $servers = array( array( '127.0.0.1', 11211, 0 ) );
+	 * weight value: $servers = array( array( 'iw-memcached', 11211, 0 ) );
 	 *
 	 * @link    http://www.php.net/manual/en/memcached.addservers.php
 	 *
