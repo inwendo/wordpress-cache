@@ -1,4 +1,10 @@
 <?php
+
+if ( !defined('IW_DEFAULT_MEMCACHE_EXPIRATION')) {
+    // set to 6 hours
+    define( 'IW_DEFAULT_MEMCACHE_EXPIRATION', 21600 );
+}
+
 /**
  * Adds a value to cache.
  *
@@ -10,10 +16,10 @@
  * @param string    $key        The key under which to store the value.
  * @param mixed     $value      The value to store.
  * @param string    $group      The group value appended to the $key.
- * @param int       $expiration The expiration time, defaults to 0.
+ * @param int       $expiration The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
  * @return bool                 Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_add( $key, $value, $group = '', $expiration = 0 ) {
+function wp_cache_add( $key, $value, $group = '', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 	global $wp_object_cache;
 	return $wp_object_cache->add( $key, $value, $group, $expiration );
 }
@@ -32,10 +38,10 @@ function wp_cache_add( $key, $value, $group = '', $expiration = 0 ) {
  * @param string    $key            The key under which to store the value.
  * @param mixed     $value          The value to store.
  * @param string    $group          The group value appended to the $key.
- * @param int       $expiration     The expiration time, defaults to 0.
+ * @param int       $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
  * @return bool                     Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_add_by_key( $server_key, $key, $value, $group = '', $expiration = 0 ) {
+function wp_cache_add_by_key( $server_key, $key, $value, $group = '', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 	global $wp_object_cache;
 	return $wp_object_cache->addByKey( $server_key, $key, $value, $group, $expiration );
 }
@@ -128,10 +134,10 @@ function wp_cache_append_by_key( $server_key, $key, $value, $group = '' ) {
  * @param string    $key        The key under which to store the value.
  * @param mixed     $value      The value to store.
  * @param string    $group      The group value appended to the $key.
- * @param int       $expiration The expiration time, defaults to 0.
+ * @param int       $expiration The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
  * @return bool                 Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_cas( $cas_token, $key, $value, $group = '', $expiration = 0 ) {
+function wp_cache_cas( $cas_token, $key, $value, $group = '', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 	global $wp_object_cache;
 	return $wp_object_cache->cas( $cas_token, $key, $value, $group, $expiration );
 }
@@ -149,10 +155,10 @@ function wp_cache_cas( $cas_token, $key, $value, $group = '', $expiration = 0 ) 
  * @param string    $key        The key under which to store the value.
  * @param mixed     $value      The value to store.
  * @param string    $group      The group value appended to the $key.
- * @param int       $expiration The expiration time, defaults to 0.
+ * @param int       $expiration The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
  * @return bool                 Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_cas_by_key( $cas_token, $server_key, $key, $value, $group = '', $expiration = 0 ) {
+function wp_cache_cas_by_key( $cas_token, $server_key, $key, $value, $group = '', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 	global $wp_object_cache;
 	return $wp_object_cache->casByKey( $cas_token, $server_key, $key, $value, $group, $expiration );
 }
@@ -594,10 +600,10 @@ function wp_cache_prepend_by_key( $server_key, $key, $value, $group = '' ) {
  * @param string    $key        The key under which to store the value.
  * @param mixed     $value      The value to store.
  * @param string    $group      The group value appended to the $key.
- * @param int       $expiration The expiration time, defaults to 0.
+ * @param int       $expiration The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
  * @return bool                 Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_replace( $key, $value, $group = '', $expiration = 0 ) {
+function wp_cache_replace( $key, $value, $group = '', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 	global $wp_object_cache;
 	return $wp_object_cache->replace( $key, $value, $group, $expiration );
 }
@@ -614,10 +620,10 @@ function wp_cache_replace( $key, $value, $group = '', $expiration = 0 ) {
  * @param string    $key            The key under which to store the value.
  * @param mixed     $value          The value to store.
  * @param string    $group          The group value appended to the $key.
- * @param int       $expiration     The expiration time, defaults to 0.
+ * @param int       $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
  * @return bool                     Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_replace_by_key( $server_key, $key, $value, $group = '', $expiration = 0 ) {
+function wp_cache_replace_by_key( $server_key, $key, $value, $group = '', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 	global $wp_object_cache;
 	return $wp_object_cache->replaceByKey( $server_key, $key, $value, $group, $expiration );
 }
@@ -632,10 +638,10 @@ function wp_cache_replace_by_key( $server_key, $key, $value, $group = '', $expir
  * @param string    $key        The key under which to store the value.
  * @param mixed     $value      The value to store.
  * @param string    $group      The group value appended to the $key.
- * @param int       $expiration The expiration time, defaults to 0.
+ * @param int       $expiration The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
  * @return bool                 Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_set( $key, $value, $group = '', $expiration = 0 ) {
+function wp_cache_set( $key, $value, $group = '', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 	global $wp_object_cache;
 	return $wp_object_cache->set( $key, $value, $group, $expiration );
 }
@@ -651,10 +657,10 @@ function wp_cache_set( $key, $value, $group = '', $expiration = 0 ) {
  * @param string    $key            The key under which to store the value.
  * @param mixed     $value          The value to store.
  * @param string    $group          The group value appended to the $key.
- * @param int       $expiration     The expiration time, defaults to 0.
+ * @param int       $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
  * @return bool                     Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_set_by_key( $server_key, $key, $value, $group = '', $expiration = 0 ) {
+function wp_cache_set_by_key( $server_key, $key, $value, $group = '', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 	global $wp_object_cache;
 	return $wp_object_cache->setByKey( $server_key, $key, $value, $group, $expiration );
 }
@@ -670,10 +676,10 @@ function wp_cache_set_by_key( $server_key, $key, $value, $group = '', $expiratio
  *
  * @param array         $items      An array of key/value pairs to store on the server.
  * @param string|array  $groups     Group(s) to merge with key(s) in $items.
- * @param int           $expiration The expiration time, defaults to 0.
+ * @param int           $expiration The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
  * @return bool                     Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_set_multi( $items, $groups = '', $expiration = 0 ) {
+function wp_cache_set_multi( $items, $groups = '', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 	global $wp_object_cache;
 	return $wp_object_cache->setMulti( $items, $groups, $expiration );
 }
@@ -690,10 +696,10 @@ function wp_cache_set_multi( $items, $groups = '', $expiration = 0 ) {
  * @param string        $server_key The key identifying the server to store the value on.
  * @param array         $items      An array of key/value pairs to store on the server.
  * @param string|array  $groups     Group(s) to merge with key(s) in $items.
- * @param int           $expiration The expiration time, defaults to 0.
+ * @param int           $expiration The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
  * @return bool                     Returns TRUE on success or FALSE on failure.
  */
-function wp_cache_set_multi_by_key( $server_key, $items, $groups = 'default', $expiration = 0 ) {
+function wp_cache_set_multi_by_key( $server_key, $items, $groups = 'default', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 	global $wp_object_cache;
 	return $wp_object_cache->setMultiByKey( $server_key, $items, $groups, $expiration );
 }
@@ -927,12 +933,12 @@ class WP_Object_Cache {
 	 * @param   string      $key            The key under which to store the value.
 	 * @param   mixed       $value          The value to store.
 	 * @param   string      $group          The group value appended to the $key.
-	 * @param   int         $expiration     The expiration time, defaults to 0.
+	 * @param   int         $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
 	 * @param   string      $server_key     The key identifying the server to store the value on.
 	 * @param   bool        $byKey          True to store in internal cache by key; false to not store by key
 	 * @return  bool                        Returns TRUE on success or FALSE on failure.
 	 */
-	public function add( $key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = false ) {
+	public function add( $key, $value, $group = 'default', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION, $server_key = '', $byKey = false ) {
 		/*
 		 * Ensuring that wp_suspend_cache_addition is defined before calling, because sometimes an advanced-cache.php
 		 * file will load object-cache.php before wp-includes/functions.php is loaded. In those cases, if wp_cache_add
@@ -985,10 +991,10 @@ class WP_Object_Cache {
 	 * @param   string      $key            The key under which to store the value.
 	 * @param   mixed       $value          The value to store.
 	 * @param   string      $group          The group value appended to the $key.
-	 * @param   int         $expiration     The expiration time, defaults to 0.
+	 * @param   int         $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
 	 * @return  bool                        Returns TRUE on success or FALSE on failure.
 	 */
-	public function addByKey( $server_key, $key, $value, $group = 'default', $expiration = 0 ) {
+	public function addByKey( $server_key, $key, $value, $group = 'default', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 		return $this->add( $key, $value, $group, $expiration, $server_key, true );
 	}
 
@@ -1112,12 +1118,12 @@ class WP_Object_Cache {
 	 * @param   string      $key            The key under which to store the value.
 	 * @param   mixed       $value          The value to store.
 	 * @param   string      $group          The group value appended to the $key.
-	 * @param   int         $expiration     The expiration time, defaults to 0.
+	 * @param   int         $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
 	 * @param   string      $server_key     The key identifying the server to store the value on.
 	 * @param   bool        $byKey          True to store in internal cache by key; false to not store by key
 	 * @return  bool                        Returns TRUE on success or FALSE on failure.
 	 */
-	public function cas( $cas_token, $key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = false ) {
+	public function cas( $cas_token, $key, $value, $group = 'default', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION, $server_key = '', $byKey = false ) {
 		$derived_key = $this->buildKey( $key, $group );
 		$expiration  = $this->sanitize_expiration( $expiration );
 
@@ -1157,10 +1163,10 @@ class WP_Object_Cache {
 	 * @param   string      $key            The key under which to store the value.
 	 * @param   mixed       $value          The value to store.
 	 * @param   string      $group          The group value appended to the $key.
-	 * @param   int         $expiration     The expiration time, defaults to 0.
+	 * @param   int         $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
 	 * @return  bool                        Returns TRUE on success or FALSE on failure.
 	 */
-	public function casByKey( $cas_token, $server_key, $key, $value, $group = 'default', $expiration = 0 ) {
+	public function casByKey( $cas_token, $server_key, $key, $value, $group = 'default', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 		return $this->cas( $cas_token, $key, $value, $group, $expiration, $server_key, true );
 	}
 
@@ -1767,10 +1773,10 @@ class WP_Object_Cache {
 	 * @param   mixed       $value          The value to store.
 	 * @param   string      $group          The group value appended to the $key.
 	 * @param   bool        $byKey          True to store in internal cache by key; false to not store by key
-	 * @param   int         $expiration     The expiration time, defaults to 0.
+	 * @param   int         $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
 	 * @return  bool                        Returns TRUE on success or FALSE on failure.
 	 */
-	public function replace( $key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = false ) {
+	public function replace( $key, $value, $group = 'default', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION, $server_key = '', $byKey = false ) {
 		$derived_key = $this->buildKey( $key, $group );
 		$expiration  = $this->sanitize_expiration( $expiration );
 
@@ -1810,10 +1816,10 @@ class WP_Object_Cache {
 	 * @param   string      $key            The key under which to store the value.
 	 * @param   mixed       $value          The value to store.
 	 * @param   string      $group          The group value appended to the $key.
-	 * @param   int         $expiration     The expiration time, defaults to 0.
+	 * @param   int         $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
 	 * @return  bool                        Returns TRUE on success or FALSE on failure.
 	 */
-	public function replaceByKey( $server_key, $key, $value, $group = 'default', $expiration = 0 ) {
+	public function replaceByKey( $server_key, $key, $value, $group = 'default', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 		return $this->replace( $key, $value, $group, $expiration, $server_key, true );
 	}
 
@@ -1827,12 +1833,12 @@ class WP_Object_Cache {
 	 * @param   string      $key        The key under which to store the value.
 	 * @param   mixed       $value      The value to store.
 	 * @param   string      $group      The group value appended to the $key.
-	 * @param   int         $expiration The expiration time, defaults to 0.
+	 * @param   int         $expiration The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
 	 * @param   string      $server_key The key identifying the server to store the value on.
 	 * @param   bool        $byKey      True to store in internal cache by key; false to not store by key
 	 * @return  bool                    Returns TRUE on success or FALSE on failure.
 	 */
-	public function set( $key, $value, $group = 'default', $expiration = 0, $server_key = '', $byKey = false ) {
+	public function set( $key, $value, $group = 'default', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION, $server_key = '', $byKey = false ) {
 		$derived_key = $this->buildKey( $key, $group );
 		$expiration  = $this->sanitize_expiration( $expiration );
 
@@ -1867,10 +1873,10 @@ class WP_Object_Cache {
 	 * @param   string      $key            The key under which to store the value.
 	 * @param   mixed       $value          The value to store.
 	 * @param   string      $group          The group value appended to the $key.
-	 * @param   int         $expiration     The expiration time, defaults to 0.
+	 * @param   int         $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
 	 * @return  bool                        Returns TRUE on success or FALSE on failure.
 	 */
-	public function setByKey( $server_key, $key, $value, $group = 'default', $expiration = 0 ) {
+	public function setByKey( $server_key, $key, $value, $group = 'default', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 		return $this->set( $key, $value, $group, $expiration, $server_key, true );
 	}
 
@@ -1887,12 +1893,12 @@ class WP_Object_Cache {
 	 *
 	 * @param   array           $items          An array of key/value pairs to store on the server.
 	 * @param   string|array    $groups         Group(s) to merge with key(s) in $items.
-	 * @param   int             $expiration     The expiration time, defaults to 0.
+	 * @param   int             $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
 	 * @param   string          $server_key     The key identifying the server to store the value on.
 	 * @param   bool            $byKey          True to store in internal cache by key; false to not store by key
 	 * @return  bool                            Returns TRUE on success or FALSE on failure.
 	 */
-	public function setMulti( $items, $groups = 'default', $expiration = 0, $server_key = '', $byKey = false ) {
+	public function setMulti( $items, $groups = 'default', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION, $server_key = '', $byKey = false ) {
 		// Build final keys and replace $items keys with the new keys
 		$derived_keys  = $this->buildKeys( array_keys( $items ), $groups );
 		$expiration    = $this->sanitize_expiration( $expiration );
@@ -1938,10 +1944,10 @@ class WP_Object_Cache {
 	 * @param   string          $server_key     The key identifying the server to store the value on.
 	 * @param   array           $items          An array of key/value pairs to store on the server.
 	 * @param   string|array    $groups         Group(s) to merge with key(s) in $items.
-	 * @param   int             $expiration     The expiration time, defaults to 0.
+	 * @param   int             $expiration     The expiration time, defaults to IW_DEFAULT_MEMCACHE_EXPIRATION.
 	 * @return  bool                            Returns TRUE on success or FALSE on failure.
 	 */
-	public function setMultiByKey( $server_key, $items, $groups = 'default', $expiration = 0 ) {
+	public function setMultiByKey( $server_key, $items, $groups = 'default', $expiration = IW_DEFAULT_MEMCACHE_EXPIRATION ) {
 		return $this->setMulti( $items, $groups, $expiration, $server_key, true );
 	}
 
