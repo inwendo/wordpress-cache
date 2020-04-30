@@ -1,8 +1,8 @@
 <?php
 
 if (!defined('IW_DEFAULT_MEMCACHE_EXPIRATION')) {
-    // set to 6 hours
-    define('IW_DEFAULT_MEMCACHE_EXPIRATION', 21600);
+    // set to 24 hours
+    define('IW_DEFAULT_MEMCACHE_EXPIRATION', 86400);
 }
 
 if (!defined('IW_WP_CACHE_KEY_SALT') && defined('DB_NAME')){
